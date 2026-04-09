@@ -7,7 +7,6 @@ class LoginController extends Controller
     //userLogin
     public function userLogin($email, $password)
     {
-        var_dump($email, $password);
         $checkLogin ="SELECT * FROM users WHERE email='$email' AND password='$password' LIMIT 1";
         $result = $this->conn->query($checkLogin);
         if ($result->num_rows > 0)

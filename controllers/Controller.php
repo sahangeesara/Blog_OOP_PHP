@@ -16,30 +16,34 @@ class Controller
     }
 
     // Image Upload
-    public function image($img)
+    public function image($img, $existingImagePath = '')
     {
+
+        if (empty($img) || !is_array($img) || !isset($img['tmp_name']) || $img['tmp_name'] === '') {
+            return $existingImagePath;
+        }
 
         if (!is_dir('images')) {
             mkdir('images');
         }
 
-        if (empty($errors))
-        {
-         $image = $img ?? null;
-         $imagePath ='';
-
-         $ret= 'images/'.$this->randomString(8).'/'.$image['name'];
-                   if ($image) {
-              $imagePath =__DIR__ .'/../'.$ret; 
-
-                // var_dump($imagePath).die();
-              mkdir(dirname($imagePath));
-             
-              move_uploaded_file($image['tmp_name'],$imagePath);
-
-          }
+        $fileName = isset($img['name']) ? basename($img['name']) : '';
+        if ($fileName === '') {
+            return $existingImagePath;
         }
-        return $ret;
+
+        $relativePath = 'images/' . $this->randomString(8) . '/' . $fileName;
+        $absolutePath = __DIR__ . '/../' . $relativePath;
+
+        if (!is_dir(dirname($absolutePath))) {
+            mkdir(dirname($absolutePath), 0777, true);
+        }
+
+        if (move_uploaded_file($img['tmp_name'], $absolutePath)) {
+            return $relativePath;
+        }
+
+        return $existingImagePath;
     }
     
     public function randomString($n)

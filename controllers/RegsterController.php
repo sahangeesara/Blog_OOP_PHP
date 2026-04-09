@@ -11,7 +11,7 @@ class RegsterController extends Controller
         //registeration user function
         public function registeration($name,$email,$password,$role)
         {
-            $regster_qury ="INSERT INTO users (name,email,password,role) VALUES('$name','$email','$password','$role')";
+            $regster_qury ="INSERT INTO users (name,email,password,role,create_at) VALUES('$name','$email','$password','$role', NOW())";
             $result = $this->conn->query($regster_qury);
             return $result;
        
